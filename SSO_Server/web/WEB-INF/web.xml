@@ -9,7 +9,7 @@
         <servlet-class>com.allen_anker.sso.servlet.LoginServlet</servlet-class>
         <init-param>
             <param-name>domains</param-name>
-            <param-value>http://127.0.0.1:8081http://127.0.0.1:8082</param-value>
+            <param-value>http://127.0.0.1:8081 http://127.0.0.1:8082</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>

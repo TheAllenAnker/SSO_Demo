@@ -26,15 +26,25 @@ public class LoginServlet extends HttpServlet {
         if (Objects.equals("/login", request.getServletPath())) {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
+
             String source = request.getParameter("source");
+
+            if (source == null || Objects.equals("", source)) {
+                String referer = request.getHeader("referer");
+                source  = referer.substring(referer.indexOf("source=") + 7);
+            }
             String ticket = UUID.randomUUID().toString().replace("-", "");
             if (Objects.equals(username, password)) {
-                response.sendRedirect(source + "main?ticket=" + ticket + "&domains=" + domains.replace(source, ""));
+                // domains cookies need to be set after redirecting to the target url
+                response.sendRedirect(source + "/main?ticket=" + ticket + "&domains=" + domains.replace(source, "").trim());
             } else {
-                request.getRequestDispatcher(getServletContext() + "/WEB-INF/views/login.jsp").forward(request, response);
+                request.setAttribute("source", source);
+                // dispatch to login.jsp in current module
+                request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
             }
         } else if (Objects.equals("/sso_login", request.getServletPath())) {
-            request.getRequestDispatcher(getServletContext() + "/WEB-INF/views/login.jsp").forward(request, response);
+            // dispatch to login.jsp in current module
+            request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
         }
     }
 }
